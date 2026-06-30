@@ -55,11 +55,9 @@ kramp-assignment/
 
 **Regex URL assertions over `page.url()` + `.toContain()`:** I experimented with the latter as an alternative, but `page.url()` is evaluated synchronously and doesn't benefit from Playwright's automatic retry/waiting — this caused flaky failures right after navigation, before the URL had updated. Reverted to `expect(page).toHaveURL(regex)`, which waits and retries automatically.
 
-**`domcontentloaded` over `networkidle`:** Initially used `networkidle`, but the Kramp demo site continuously fires background requests. This caused consistent 30-second timeouts. Switched to `domcontentloaded`, which only waits for the HTML to load and is sufficient here. This also aligns with current Playwright guidance.
+**`domcontentloaded` over `networkidle`:** Initially used `networkidle`, but Kramp demo site continuously fires background requests. This caused consistent 30-second timeouts. Switched to `domcontentloaded`, which only waits for the HTML to load and is sufficient here. This also aligns with current Playwright guidance.
 
 **Cookie consent and language popups handled defensively:** Since each test run starts in a fresh incognito context, these popups can reappear at the start of every run. A short wait was added after `domcontentloaded` to give the cookie popup time to render before checking for it, then handled with `isVisible()` checks before clicking, so the test doesn't fail if a popup happens not to appear in a given run.
-
-**Clicking real UI elements instead of using `href`:** Navigated by clicking actual buttons/links rather than going directly to their `href` values. The point of an E2E test is to verify the journey actually works through the UI, navigating via `href` wouldn't confirm the button itself is functional or enabled.
 
 **Dynamic product verification on the confirmation page:** The assignment requires verifying that the confirmation page shows the correct product number and quantity for the ordered item. Since a generic search term is used, the selected product's number is captured during the search step and stored, then compared against the product number shown on the confirmation page.
 
