@@ -13,6 +13,7 @@ This solution automates the core end to end purchase journey on the Kramp demo p
 
 ```bash
 npm install
+npx playwright install chromium
 npx playwright test
 ```
 
